@@ -54,7 +54,7 @@
 		
 		// AJAX
 		var request = new XMLHttpRequest();
-		request.open('GET', 'index.json', true);
+		request.open('GET', 'data/E/index.json', true);
 
 		request.onreadystatechange = function() {
 		  if (this.readyState === 4){
@@ -96,7 +96,7 @@
 						
 					// AJAX		
 					var request = new XMLHttpRequest();
-					request.open('GET', 'text/' + id + '.txt', true);
+					request.open('GET', 'text/E/' + id + '.txt', true);
 
 					request.onreadystatechange = function() {
 					  if (this.readyState === 4){
