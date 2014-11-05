@@ -68,7 +68,7 @@
       return function (input) {
 		
 		//FIXME
-		if (!XRegExp && require) XRegExp = require('xregexp').XRegExp;
+		if (typeof XRegExp == 'undefined' && require) XRegExp = require('xregexp').XRegExp;
 		
 		var showdebug = 0;
 		var stem = input;

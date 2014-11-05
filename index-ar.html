@@ -1,0 +1,174 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+		<style>
+		li {
+			margin: 1em;
+		}
+		span span {
+			background-color: yellow;
+		}
+		
+		* {
+			direction: rtl;
+		}
+		</style>
+
+
+
+    </head>
+    <body>
+
+		<main>
+			
+			<p>test: خبيز</p>
+			
+			<fieldset>
+				<legend>Search</legend>
+				<input id=search type=text>
+			</fieldset>
+			<section>
+				<ol>
+				</ol>
+			</section>
+		</main>
+
+        <script src="node_modules/lunr/lunr.js"></script>
+		<script src="node_modules/lunr-languages/lunr.stemmer.support.js"></script>
+		
+		<script src="node_modules/xregexp/xregexp-all.js"></script>
+		
+		<script src="lunr.ar.js"></script>
+	
+		<script>		
+	
+		// meh
+		function addEventListener(el, eventName, handler) {
+		  if (el.addEventListener) {
+		    el.addEventListener(eventName, handler);
+		  } else {
+		    el.attachEvent('on' + eventName, function(){
+		      handler.call(el);
+		    });
+		  }
+		}
+		
+		
+		var index; // we will load the index in here
+		
+		// AJAX
+		var request = new XMLHttpRequest();
+		request.open('GET', 'data/A/index.json', true);
+
+		request.onreadystatechange = function() {
+		  if (this.readyState === 4){
+		    if (this.status >= 200 && this.status < 400){
+		      index = lunr.Index.load(JSON.parse(this.responseText));
+			  addEventListener(document.getElementById('search'), 'change', doSearch);
+		    } else {
+		      // Silent error
+		    }
+		  }
+		};
+
+		request.send();
+		request = null;
+		
+		
+		function doSearch() {
+			// clean-up
+			var resultsContainer = document.querySelectorAll('ol')[0];
+			while (resultsContainer.firstChild) resultsContainer.removeChild(resultsContainer.firstChild);
+			
+			var query = document.getElementById('search').value.trim();
+			var results = index.search(query);
+			
+			for (var r = 0; r < results.length; r++) {
+
+				// don't ask
+				(function() {
+					// video-paragraph-timecode
+					var idParts = results[r].ref.split('-');
+					var id = idParts[0] + '-' + idParts[1];
+					var second = parseInt(idParts[2]/1000);
+					if (second == 0) second = 1;
+					
+					var el = document.createElement('div');
+					el.innerHTML = '<li id=r' + id + '><img src="images/' + idParts[0] + '/A/p/img' + second + '.jpg"><span>loading…</span></li>';
+					var result = el.children[0];					
+					resultsContainer.appendChild(result);
+						
+					// AJAX		
+					var request = new XMLHttpRequest();
+					request.open('GET', 'text/A/' + id + '.txt', true);
+
+					request.onreadystatechange = function() {
+					  if (this.readyState === 4){
+					    if (this.status >= 200 && this.status < 400){
+
+	  						var search = query.split(' ');
+					
+	  						var sentences = this.responseText.split('.'); // meh
+	  						var resultSentences = [];
+					
+	  						for (var s = 0; s < sentences.length; s++) {
+						
+	  							var match = 0;
+	  							var words = sentences[s].split(' ');
+					
+	  							for (var i = 0; i < search.length; i++) {
+	  								
+									// var keyword = lunr.stemmer(search[i].toLowerCase());
+									var keyword = lunr.ar.stemmer(search[i].toLowerCase());
+									// var keyword = search[i].toLowerCase().trim();
+									console.log(keyword);
+									
+	  								for (var j = 0; j < words.length; j++) {
+	  									if (
+											words[j].toLowerCase().indexOf(keyword) == 0
+											|| words[j].toLowerCase().indexOf('-' + keyword) > -1
+											|| words[j].toLowerCase().indexOf('لل' + keyword) > -1
+											|| words[j].toLowerCase().indexOf('ال' + keyword) > -1
+										) {
+	  										words[j] = '<span>' + words[j] + '</span>';
+	  										match++;
+	  									}
+	  								}
+	  							}
+	  							// if (match > 0) {
+	  								sentences[s] = words.join(' ');
+	  								resultSentences.push(sentences[s]);
+	  							// }
+					
+	  						}
+							
+							document.querySelectorAll('#r' + id + ' span')[0].innerHTML = resultSentences.join('. ') + '.';
+							
+					    } else {
+					      // Silent error
+					    }
+					  }
+					};
+
+					request.send();
+					request = null;				
+					
+				})();
+			}
+			 
+		} // doSearch
+		
+			
+
+
+		</script>
+    </body>
+</html>
