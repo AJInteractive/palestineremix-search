@@ -33,7 +33,7 @@ function indexLanguage(lang) {
 			for (var k = 0; k < para.length; k++) {
 				var $p = $(para[k]);
 			
-				var text = $p.text().trim();
+				var text = $p.text().replace(/\n/, ' ').replace(/\s+/g, ' ').trim();
 				data[v].push(text);
 
 				if (text == '') continue;
@@ -57,6 +57,13 @@ function indexLanguage(lang) {
 	
 		for (var v = 0; v < 21; v++) {
 			data.push([]);
+			
+			// var file2 = '../' + v + '/' + lang + '/t.html';
+			// if (fs.existsSync(file2)) {
+			// 	var html = fs.readFileSync(file2).toString();
+			// 	fs.writeFileSync('../' + v + '/' + lang + '/transcript.html', html);
+			// }
+						
 			var file = '../' + v + '/' + lang + '/transcript.html';
 			if (!fs.existsSync(file)) continue;
 		
@@ -64,7 +71,6 @@ function indexLanguage(lang) {
 			fs.writeFileSync('html/' + lang + '/' + v + '.html', html);
 		
 			indexDocument.sync(null, v, html);
-
 		}
 
 		console.log(data.length);
@@ -76,5 +82,7 @@ function indexLanguage(lang) {
 
 }
 
-indexLanguage('E');
+// indexLanguage('E');
 // indexLanguage('A');
+// indexLanguage('T');
+indexLanguage('B');
