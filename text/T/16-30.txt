@@ -1,0 +1,1 @@
+Grevde ölenler için de bir değişim stratejisi geliştirdik Yetmiş isim arasından yedekleri seçmeye koyulduk Böylece grevdekilerden biri öldüğünde yerine başka birisi geçer ve süreç kesintisiz devam ederdi

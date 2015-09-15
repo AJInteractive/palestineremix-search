@@ -89,6 +89,6 @@ function indexLanguage(lang) {
 }
 
 // indexLanguage('E');
-indexLanguage('A');
-//indexLanguage('T');
+// indexLanguage('A');
+indexLanguage('T');
 // indexLanguage('B');
