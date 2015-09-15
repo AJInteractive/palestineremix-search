@@ -66,6 +66,7 @@
       /* and return a function that stems a word for the current locale */
 	  // from https://github.com/ejtaal/jsastem
       return function (input) {
+          // return input;
 		
 		//FIXME
 		if (typeof XRegExp == 'undefined' && require) XRegExp = require('xregexp').XRegExp;

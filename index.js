@@ -14,7 +14,7 @@ var util = require('util');
 function indexLanguage(lang) {  
 	
 	var index = lunr(function () {
-		if (lang == 'A') this.use(lunr.ar);
+        if (lang == 'A') this.use(lunr.ar);
 		if (lang == 'T') this.use(lunr.tr);
 		
 	    this.field('T')
@@ -22,6 +22,13 @@ function indexLanguage(lang) {
 	});
 
 	var data = [];
+	
+	var indexP = function (text, id) {
+		index.add({
+			T: text,
+			I: id
+		});
+	};
 
 	function indexDocument(v, html, callback) {
 		env(html, function (errors, window) {
@@ -35,6 +42,7 @@ function indexLanguage(lang) {
 			
 				var text = $p.text().replace(/\n/, ' ').replace(/\s+/g, ' ').trim();
 				data[v].push(text);
+                text = text.replace(/["\[\]\.,-\/#!$%\^&\*;:{}=\-_`~()]/g," ").replace('؟', ' ').replace('،', ' ').replace(/\s+/g, ' ').trim();
 
 				if (text == '') continue;
 			
@@ -42,17 +50,15 @@ function indexLanguage(lang) {
 				var id = v + '-' + k + '-' + time;
 		
 				fs.writeFileSync('text/' + lang + '/' + v + '-' + k + '.txt', text);
-		
-				index.add({
-					T: text,
-					I: id
-				});
+				indexP(text, id);
 			}
 		
 			callback(null);		
 		});
 	}
 
+
+	
 	Sync(function(){
 	
 		for (var v = 0; v < 21; v++) {
@@ -83,6 +89,6 @@ function indexLanguage(lang) {
 }
 
 //indexLanguage('E');
- indexLanguage('A');
-// indexLanguage('T');
-// indexLanguage('B');
+//indexLanguage('A');
+//indexLanguage('T');
+indexLanguage('B');
