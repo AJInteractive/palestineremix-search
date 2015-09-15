@@ -61,7 +61,7 @@ function indexLanguage(lang) {
 	
 	Sync(function(){
 	
-		for (var v = 0; v < 21; v++) {
+		for (var v = 0; v < 28; v++) {
 			data.push([]);
 			
 			// var file2 = '../' + v + '/' + lang + '/t.html';
@@ -88,7 +88,7 @@ function indexLanguage(lang) {
 
 }
 
-// indexLanguage('E');
+indexLanguage('E');
 // indexLanguage('A');
 // indexLanguage('T');
-indexLanguage('B');
+// indexLanguage('B');
